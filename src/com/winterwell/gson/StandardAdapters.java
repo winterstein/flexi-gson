@@ -60,8 +60,9 @@ public static class TimeTypeAdapter implements JsonSerializer<Time>, JsonDeseria
 		if (Utils.isBlank(s)) {
 			return null;
 		}
-		Time t = TimeUtils.parseExperimental(s);
-		return t;
+		// HACK 
+		winterwell.utils.time.Time t = TimeUtils.parseExperimental(s);
+		return new Time(t.getTime());
 	}
 }
 
