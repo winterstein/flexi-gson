@@ -38,6 +38,7 @@ import com.winterwell.gson.InstanceCreator;
 import com.winterwell.gson.JsonIOException;
 import com.winterwell.gson.JsonParseException;
 import com.winterwell.gson.reflect.TypeToken;
+import com.winterwell.utils.Utils;
 
 /**
  * Returns a function that can construct an instance of a requested type.
@@ -69,8 +70,7 @@ public final class ConstructorConstructor {
 
 		// Next try raw type match for instance creators
 		@SuppressWarnings("unchecked") // types must agree
-		final InstanceCreator<T> rawTypeCreator =
-		(InstanceCreator<T>) instanceCreators.get(rawType);
+		final InstanceCreator<T> rawTypeCreator = (InstanceCreator<T>) instanceCreators.get(rawType);
 		if (rawTypeCreator != null) {
 			return new AObjectConstructor<T>(rawType) {
 				public T construct() {
@@ -96,7 +96,7 @@ public final class ConstructorConstructor {
 	private <T> ObjectConstructor<T> newDefaultConstructor(Class<? super T> rawType) {
 		try {
 			return new DefaultObjectConstructor(rawType);
-		} catch (NoSuchMethodException e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
@@ -222,7 +222,10 @@ abstract class AObjectConstructor<T> implements ObjectConstructor<T> {
 		return type;
 	}
 
-
+	@Override
+	public T construct(String string) {
+		return ObjectConstructor.super.construct(string);
+	}
 }
 
 
@@ -233,10 +236,19 @@ class DefaultObjectConstructor<T> extends AObjectConstructor<T> {
 
 	DefaultObjectConstructor(Class rawType) throws NoSuchMethodException, SecurityException {
 		super(rawType);
-		constructor = rawType.getDeclaredConstructor();
-		if (!constructor.isAccessible()) {
-			constructor.setAccessible(true);
-		}	    
+		// no-args constructor
+		Exception ex = null;
+		Constructor<? super T> _constructor = null;
+		try {
+			_constructor = rawType.getDeclaredConstructor();
+			if ( ! _constructor.isAccessible()) {
+				_constructor.setAccessible(true);
+			}	    
+		} catch (NoSuchMethodException nosuch) {
+			ex = nosuch;
+		}	
+		constructor = _constructor;
+		
 		// string constructor
 		Constructor<? super T> scons = null;
 		try {
@@ -248,6 +260,9 @@ class DefaultObjectConstructor<T> extends AObjectConstructor<T> {
 			// oh well 	    	
 		}	
 		sconstructor = scons;
+		if (constructor==null && sconstructor==null) {
+			throw Utils.runtime(ex);
+		}
 	}
 
 	@Override
