@@ -39,6 +39,7 @@ import com.winterwell.gson.JsonIOException;
 import com.winterwell.gson.JsonParseException;
 import com.winterwell.gson.reflect.TypeToken;
 import com.winterwell.utils.Utils;
+import com.winterwell.utils.WrappedException;
 
 /**
  * Returns a function that can construct an instance of a requested type.
@@ -214,7 +215,7 @@ abstract class AObjectConstructor<T> implements ObjectConstructor<T> {
 
 	@Override
 	public final String toString() {
-		return "ObjectConstructor["+type+"]";
+		return getClass()+"["+type+"]";
 	}
 
 	@Override
@@ -257,7 +258,7 @@ class DefaultObjectConstructor<T> extends AObjectConstructor<T> {
 				scons.setAccessible(true);
 			}      
 		} catch (NoSuchMethodException nosuch) {
-			// oh well 	    	
+			// oh well 	   	
 		}	
 		sconstructor = scons;
 		if (constructor==null && sconstructor==null) {
@@ -272,34 +273,23 @@ class DefaultObjectConstructor<T> extends AObjectConstructor<T> {
 		}
 		try {
 			return (T) sconstructor.newInstance(string);
-		} catch (InstantiationException e) {
-			// TODO: JsonParseException ?
-			throw new RuntimeException("Failed to invoke " + sconstructor + " with string "+string, e);
-		} catch (InvocationTargetException e) {
-			// TODO: don't wrap if cause is unchecked!
-			// TODO: JsonParseException ?
-			throw new RuntimeException("Failed to invoke " + sconstructor + " with string "+string, e);
-		} catch (IllegalAccessException e) {
-			throw new AssertionError(e);
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to invoke constructor(String) for "+getType()+" with string "+string, e);
 		}
 	}
 
 	@Override
 	@SuppressWarnings("unchecked") // T is the same raw type as is requested
 	public T construct() {
+		if (constructor==null) {
+			assert sconstructor!=null : this;
+			throw new JsonParseException("No constructor for "+getType()+" with no input.");
+		}
 		try {
 			Object[] args = null;
 			return (T) constructor.newInstance(args);
-		} catch (InstantiationException e) {
-			// TODO: JsonParseException ?
-			throw new RuntimeException("Failed to invoke " + constructor + " with no args", e);
-		} catch (InvocationTargetException e) {
-			// TODO: don't wrap if cause is unchecked!
-			// TODO: JsonParseException ?
-			throw new RuntimeException("Failed to invoke " + constructor + " with no args",
-					e.getTargetException());
-		} catch (IllegalAccessException e) {
-			throw new AssertionError(e);
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to invoke constructor() for "+getType()+" with no args", e);		
 		}
 	}
 
