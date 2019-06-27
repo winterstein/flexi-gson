@@ -285,10 +285,8 @@ class DefaultObjectConstructor<T> extends AObjectConstructor<T> {
 	@SuppressWarnings("unchecked") // T is the same raw type as is requested
 	public T construct() {		
 		try {
-			if (constructor==null) {			
-				assert sconstructor!=null : this;
+			if (constructor==null) {
 				return unsafeAllocator.newInstance(getType());
-//				throw new JsonParseException("No constructor for "+getType()+" with no input.");
 			}
 			
 			Object[] args = null;

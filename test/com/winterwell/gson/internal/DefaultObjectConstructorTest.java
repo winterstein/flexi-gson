@@ -6,7 +6,17 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.winterwell.utils.Utils;
+
 public class DefaultObjectConstructorTest {
+
+	@Test
+	public void testNoCons() throws NoSuchMethodException, SecurityException {
+		DefaultObjectConstructor doc = new DefaultObjectConstructor(NoCons.class);
+		NoCons foo = (NoCons) doc.construct();
+		NoCons foo2 = (NoCons) doc.construct("blah");
+		assert foo != null;
+	}
 
 	@Test
 	public void testNoArgs() throws NoSuchMethodException, SecurityException {
@@ -30,6 +40,12 @@ public class DefaultObjectConstructorTest {
 		assert foo != null;
 	}
 
+}
+
+class NoCons {
+	int n = Utils.getRandom().nextInt();
+	public NoCons(String foo) {
+	}
 }
 
 class NoArgs {
