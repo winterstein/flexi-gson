@@ -234,6 +234,7 @@ class DefaultObjectConstructor<T> extends AObjectConstructor<T> {
 
 	final Constructor<? super T> constructor;
 	final Constructor<? super T> sconstructor;
+	private UnsafeAllocator unsafeAllocator;
 
 	DefaultObjectConstructor(Class rawType) throws NoSuchMethodException, SecurityException {
 		super(rawType);
@@ -247,6 +248,8 @@ class DefaultObjectConstructor<T> extends AObjectConstructor<T> {
 			}	    
 		} catch (NoSuchMethodException nosuch) {
 			ex = nosuch;
+			// make an unsafe allocator. e.g. Thing is always made from Strings, but the internal fields are numbers -- then we end up needing this. 
+			unsafeAllocator = UnsafeAllocator.create();
 		}	
 		constructor = _constructor;
 		
@@ -280,12 +283,14 @@ class DefaultObjectConstructor<T> extends AObjectConstructor<T> {
 
 	@Override
 	@SuppressWarnings("unchecked") // T is the same raw type as is requested
-	public T construct() {
-		if (constructor==null) {
-			assert sconstructor!=null : this;
-			throw new JsonParseException("No constructor for "+getType()+" with no input.");
-		}
+	public T construct() {		
 		try {
+			if (constructor==null) {			
+				assert sconstructor!=null : this;
+				return unsafeAllocator.newInstance(getType());
+//				throw new JsonParseException("No constructor for "+getType()+" with no input.");
+			}
+			
 			Object[] args = null;
 			return (T) constructor.newInstance(args);
 		} catch (Exception e) {
