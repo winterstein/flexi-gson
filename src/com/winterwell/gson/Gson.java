@@ -122,6 +122,12 @@ import com.winterwell.utils.log.KErrorPolicy;
  */
 public class Gson {
 	
+	/**
+	 * POJO to map/list/primitive "json object" conversion .
+	 * This does serialise -> deserialise
+	 * @param src
+	 * @return a "json object" copy of src
+	 */
 	public Map toJsonObject(Object src) {
 		String json = toJson(src);
 		// Don't use a flexi-gson convertor! Because we don't want to interpret class info.
