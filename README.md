@@ -29,3 +29,5 @@ This case happens all the time in Java, either through using interfaces or Maps.
 ## The Parent GSON: Version ??
 
 This version of GSON was forked from ??
+
+TODO now that gson has moved form Google Code to Git and GitHub -- it'd be good to fork the official repo and edit that.
