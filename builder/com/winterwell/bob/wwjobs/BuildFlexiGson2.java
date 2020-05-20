@@ -15,9 +15,9 @@ import com.winterwell.utils.io.FileUtils;
 public class BuildFlexiGson2 extends BuildWinterwellProject {
 
 	public BuildFlexiGson2() {
-		super(new File(FileUtils.getWinterwellDir(), "flexi-gson"));
-		setIncSrc(true);
-		setScpToWW(true);
+		super("flexi-gson");
+//		setIncSrc(true);
+//		setScpToWW(true);
 	}
 
 	@Override
