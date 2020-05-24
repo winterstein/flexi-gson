@@ -20,6 +20,13 @@ import com.winterwell.utils.web.IHasJson;
 public class StandardAdapters {
 
 
+	public static class ToStringSerialiser implements JsonSerializer<Object> {
+		@Override
+		public JsonElement serialize(Object src, Type typeOfSrc, JsonSerializationContext context) {
+			return context.serialize(src.toString());
+		}
+	}
+
 	public static final JsonSerializer IHASJSONADAPTER = new JsonSerializer<IHasJson>() {
 		@Override
 		public JsonElement serialize(IHasJson src, Type typeOfSrc, JsonSerializationContext context) {

@@ -5,11 +5,50 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.winterwell.utils.AString;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.time.Time;
 
 public class StandardAdaptersTest {
 
+
+	@Test
+	public void testToString() {
+		Gson gsonWith = new GsonBuilder()
+						.registerTypeAdapter(Class.class, new StandardAdapters.ClassTypeAdapter())
+						.registerTypeAdapter(AString.class, new StandardAdapters.ToStringSerialiser())
+						.create();
+		
+		AString foo = new AString("foo");
+		String gson1 = gsonWith.toJson(foo);
+		assert gson1.equals("\"foo\"") : gson1;
+		System.out.println(gson1);
+		AString now2 = gsonWith.fromJson(gson1, AString.class);
+		assert foo.equals(now2) : foo+" vs "+now2;
+	}
+	
+	@Test
+	public void testToStringSubClass() {
+		Gson gsonWith = new GsonBuilder()
+						.registerTypeAdapter(Class.class, new StandardAdapters.ClassTypeAdapter())
+						.registerTypeHierarchyAdapter(AString.class, new StandardAdapters.ToStringSerialiser())
+						.create();
+		
+		TestString foo = new TestString("foo");
+		String gson1 = gsonWith.toJson(foo);
+		System.out.println(gson1);
+		assert gson1.equals("\"foo\"") : gson1;
+		TestString now2 = gsonWith.fromJson(gson1, TestString.class);
+		assert foo.equals(now2);
+	}
+	
+	static class TestString extends AString {
+		public TestString(String name) {
+			super(name);
+		}
+		private static final long serialVersionUID = 1L;
+		
+	}
 	
 	@Test
 	public void testTime() {
