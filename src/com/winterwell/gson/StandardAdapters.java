@@ -15,7 +15,7 @@ import com.winterwell.utils.web.IHasJson;
 /**
  * TODO move some of our adapters in here for our convenience
  * @author daniel
- * @testedby {@link StandardAdaptersTest}
+ * @testedby  StandardAdaptersTest}
  */
 public class StandardAdapters {
 
