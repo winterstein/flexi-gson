@@ -7,10 +7,31 @@ import org.junit.Test;
 
 import com.winterwell.utils.AString;
 import com.winterwell.utils.containers.ArrayMap;
+import com.winterwell.utils.containers.Slice;
 import com.winterwell.utils.time.Time;
 
 public class StandardAdaptersTest {
 
+
+	@Test
+	public void testSlice() {
+		Gson gsonWith = new GsonBuilder()
+				// NB: either of these work
+						.registerTypeAdapter(Slice.class, new StandardAdapters.CharSequenceTypeAdapter(Slice.class))
+//						.registerTypeAdapter(Slice.class, new StandardAdapters.ToStringSerialiser())
+						.create();
+		
+		Slice slice = new Slice("Hello World", 1, 4);
+		String gson1 = gsonWith.toJson(slice);
+		System.out.println(gson1);
+		assert gson1.equals("\"ell\"") : gson1;		
+		Slice now2 = gsonWith.fromJson(gson1, Slice.class);
+		assert slice.toString().equals(now2.toString());
+		assert ! slice.equals(now2); // the start/end has been lost and base truncated
+		assert slice.getBase().equals("Hello World");
+		assert now2.getBase().equals("ell");
+	}
+	
 
 	@Test
 	public void testToString() {
@@ -22,7 +43,7 @@ public class StandardAdaptersTest {
 		AString foo = new AString("foo");
 		String gson1 = gsonWith.toJson(foo);
 		assert gson1.equals("\"foo\"") : gson1;
-		System.out.println(gson1);
+//		System.out.println(gson1);
 		AString now2 = gsonWith.fromJson(gson1, AString.class);
 		assert foo.equals(now2) : foo+" vs "+now2;
 	}

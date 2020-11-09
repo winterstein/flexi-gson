@@ -20,6 +20,11 @@ import com.winterwell.utils.web.IHasJson;
 public class StandardAdapters {
 
 
+	/**
+	 * This is a one-way conversion -- you might not be able to deserialise!
+	 * @author daniel
+	 *
+	 */
 	public static class ToStringSerialiser implements JsonSerializer<Object> {
 		@Override
 		public JsonElement serialize(Object src, Type typeOfSrc, JsonSerializationContext context) {
