@@ -30,6 +30,11 @@ import com.winterwell.utils.ReflectionUtils;
  * @param <T>
  */
 final class ReflectiveTypeAdapter<T> extends TypeAdapter<T> {
+	@Override
+	public String toString() {
+		return "ReflectiveTypeAdapter[type=" + type + "]";
+	}
+
 	private final Gson gson;
 	private final String classProperty;
 	private final ObjectConstructor<T> constructor;
