@@ -1,16 +1,8 @@
 package com.winterwell.gson;
 
-import java.lang.reflect.Type;
-import java.util.Map;
-
 import org.junit.Test;
 
-import com.winterwell.utils.AString;
 import com.winterwell.utils.Key;
-import com.winterwell.utils.containers.ArrayMap;
-import com.winterwell.utils.containers.Pair;
-import com.winterwell.utils.containers.Slice;
-import com.winterwell.utils.time.Time;
 
 public class RegexFirstAdapterTest {
 

@@ -17,7 +17,6 @@
 package com.winterwell.gson.internal;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -39,7 +38,6 @@ import com.winterwell.gson.JsonIOException;
 import com.winterwell.gson.JsonParseException;
 import com.winterwell.gson.reflect.TypeToken;
 import com.winterwell.utils.Utils;
-import com.winterwell.utils.WrappedException;
 
 /**
  * Returns a function that can construct an instance of a requested type.

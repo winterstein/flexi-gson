@@ -2,7 +2,6 @@ package com.winterwell.gson;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.lang.reflect.Type;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,7 +10,6 @@ import com.winterwell.gson.internal.Streams;
 import com.winterwell.gson.reflect.TypeToken;
 import com.winterwell.gson.stream.JsonReader;
 import com.winterwell.gson.stream.JsonWriter;
-import com.winterwell.utils.Utils;
 /**
  * 
  * @author daniel
