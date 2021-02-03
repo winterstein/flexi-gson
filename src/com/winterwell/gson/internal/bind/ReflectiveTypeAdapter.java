@@ -234,12 +234,13 @@ final class ReflectiveTypeAdapter<T> extends TypeAdapter<T> {
 		Object obj = con.construct();
 		// fill in the fields from map
 		for (Map.Entry<String, Object> me : map.entrySet()) {
-			if (classProperty.equals(me.getKey()))
+			final String fieldName = me.getKey();
+			if (classProperty.equals(fieldName))
 				continue;
 			Class klass = obj.getClass(); // ??type.getRawType()
-			Field f = getField(klass, me.getKey());
+			Field f = getField(klass, fieldName);
 			if (f == null) {
-				if ("@id".equals(me.getKey())) {
+				if ("@id".equals(fieldName)) {
 					in.putIdValue((String)me.getValue(), obj);
 				}
 				// a field has been removed from the class. Skip over it
@@ -264,7 +265,7 @@ final class ReflectiveTypeAdapter<T> extends TypeAdapter<T> {
 			// Class-correction: Correct for wrong-class choices, based on what the target field is.
 			// Is the target a number? We get class-cast issues where gson
 			// has opted for Double, but we need Integer
-			value = read3_maybeChangeClass_changeFieldClass(in, f.getType(), value);
+			value = read3_maybeChangeClass_changeFieldClass(in, f.getType(), value, fieldName);
 			
 			// Set it
 			f.set(obj, value);
@@ -272,7 +273,7 @@ final class ReflectiveTypeAdapter<T> extends TypeAdapter<T> {
 		return obj;
 	}
 
-	private Object read3_maybeChangeClass_changeFieldClass(JsonReader in, final Class fClass, Object value)
+	private Object read3_maybeChangeClass_changeFieldClass(JsonReader in, final Class fClass, Object value, String fieldName)
 			throws InstantiationException, IllegalAccessException 
 	{		
 		// Right class?
@@ -315,7 +316,7 @@ final class ReflectiveTypeAdapter<T> extends TypeAdapter<T> {
 				for(Object vi : collection) {
 					if (vi!=null) {
 						vi = read3_lateBinding(array, null, i, vi, in);
-						vi = read3_maybeChangeClass_changeFieldClass(in, compType, vi);
+						vi = read3_maybeChangeClass_changeFieldClass(in, compType, vi, fieldName);
 					}					
 					Array.set(array, i, vi);
 					i++;
@@ -324,7 +325,7 @@ final class ReflectiveTypeAdapter<T> extends TypeAdapter<T> {
 			}
 			if ( ! ReflectionUtils.isa(fClass, Collection.class)) {
 				// what to do??
-				throw new ClassCastException("expected: a Collection, got: "+fClass+" value: "+value);
+				throw new ClassCastException(fieldName+" Expected a Collection, got: "+fClass+" value: "+value);
 			}
 			Collection listSubClass = (Collection) fClass.newInstance();
 			int i=0;
