@@ -322,6 +322,10 @@ final class ReflectiveTypeAdapter<T> extends TypeAdapter<T> {
 				}
 				return array;				
 			}
+			if ( ! ReflectionUtils.isa(fClass, Collection.class)) {
+				// what to do??
+				throw new ClassCastException("expected: a Collection, got: "+fClass+" value: "+value);
+			}
 			Collection listSubClass = (Collection) fClass.newInstance();
 			int i=0;
 			for(Object vi : collection) {
