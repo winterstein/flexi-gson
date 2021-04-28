@@ -22,6 +22,7 @@ import com.winterwell.gson.stream.JsonToken;
 import com.winterwell.gson.stream.JsonWriter;
 import com.winterwell.utils.MathUtils;
 import com.winterwell.utils.ReflectionUtils;
+import com.winterwell.utils.containers.Containers;
 
 /**
  * Uses "@class" property to instantiate sub-classes.
@@ -273,6 +274,16 @@ final class ReflectiveTypeAdapter<T> extends TypeAdapter<T> {
 		return obj;
 	}
 
+	/**
+	 * 
+	 * @param in
+	 * @param fClass
+	 * @param value
+	 * @param fieldName
+	 * @return possibly altered version of `value`
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
 	private Object read3_maybeChangeClass_changeFieldClass(JsonReader in, final Class fClass, Object value, String fieldName)
 			throws InstantiationException, IllegalAccessException 
 	{		
@@ -310,7 +321,7 @@ final class ReflectiveTypeAdapter<T> extends TypeAdapter<T> {
 			Collection collection = (Collection)value;
 			// an array?
 			if (fClass.isArray()) {
-				final Class compType = fClass.getComponentType();
+				final Class compType = fClass.getComponentType(); // not null 'cos array
 				Object array = Array.newInstance(compType, collection.size());
 				int i=0;
 				for(Object vi : collection) {
@@ -324,6 +335,16 @@ final class ReflectiveTypeAdapter<T> extends TypeAdapter<T> {
 				return array;				
 			}
 			if ( ! ReflectionUtils.isa(fClass, Collection.class)) {
+				// unwrap a solo element 
+				if (collection.size() == 1) {
+					Object c0 = Containers.first(collection);
+					if (c0==null) {
+						return null;
+					}
+					// Right class or can it be converted? (with a guard against loops)
+					Object converted0 = read3_maybeChangeClass_changeFieldClass(in, fClass, c0, fieldName);
+					return converted0;
+				}
 				// what to do??
 				throw new ClassCastException(fieldName+" Expected a Collection, got: "+fClass+" value: "+value);
 			}
