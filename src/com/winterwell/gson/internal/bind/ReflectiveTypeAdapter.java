@@ -407,14 +407,21 @@ final class ReflectiveTypeAdapter<T> extends TypeAdapter<T> {
 		JsonReader _reader = in.getShortTermCopy();
 		try {
 			JsonToken peeked = _reader.peek();
-			if (peeked != JsonToken.BEGIN_OBJECT)
+			if (peeked != JsonToken.BEGIN_OBJECT) {
 				return null;
+			}
 			_reader.beginObject();
-			if (!_reader.hasNext())
+			if (!_reader.hasNext()) {
 				return null;
+			}
 			String name = _reader.nextName();
-			if (!classProperty.equals(name))
+			if ( ! classProperty.equals(name)) {
 				return null;
+			}
+			if (_reader.peek()==JsonToken.NULL) {
+				_reader.nextNull();
+				return null; // key: null
+			}
 			String klass = _reader.nextString();
 			return read3(klass);
 		} finally {
@@ -428,6 +435,9 @@ final class ReflectiveTypeAdapter<T> extends TypeAdapter<T> {
 	 * @throws ClassNotFoundException
 	 */
 	TypeAdapter read3(String klass) throws ClassNotFoundException {
+		if (klass==null) {
+			return null; // no info (as you were -- use constructor -- cos what else can you do)
+		}
 		// what does the constructor handle??
 		if (constructor.getType().getCanonicalName().equals(klass)) {
 			// no change needed (as you were -- use constructor)

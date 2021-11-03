@@ -1138,9 +1138,11 @@ public class Gson {
 		boolean isEmpty = true;
 		boolean oldLenient = reader.isLenient();
 		reader.setLenient(true);
+		JsonToken peekType = null;
 		try {
-			JsonToken peekType = reader.peek();
-			if (peekType==JsonToken.NULL) {
+			peekType = reader.peek();
+			if (peekType==JsonToken.NULL) { // paranoia
+				reader.nextNull();
 				return null;
 			}
 			isEmpty = false;
@@ -1161,6 +1163,7 @@ public class Gson {
 		} catch (IllegalStateException e) {
 			throw new JsonSyntaxException(e);
 		} catch (IOException e) {
+			e.printStackTrace(); // DEBUG
 			// TODO(inder): Figure out whether it is indeed right to rethrow
 			// this as JsonSyntaxException
 			throw new JsonSyntaxException(e);
