@@ -1139,13 +1139,17 @@ public class Gson {
 		boolean oldLenient = reader.isLenient();
 		reader.setLenient(true);
 		try {
-			reader.peek(); // ??
+			JsonToken peekType = reader.peek();
+			if (peekType==JsonToken.NULL) {
+				return null;
+			}
 			isEmpty = false;
 			TypeToken<T> typeToken = (TypeToken<T>) TypeToken.get(typeOfT);
 			TypeAdapter<T> typeAdapter = getAdapter(typeToken);
 			T object = typeAdapter.read(reader);
 			return object;
 		} catch (EOFException e) {
+			// NB: We need a try-catch as reader.hasNext() would also trigger an exception at EOF
 			/*
 			 * For compatibility with JSON 1.5 and earlier, we return null for
 			 * empty documents instead of throwing.

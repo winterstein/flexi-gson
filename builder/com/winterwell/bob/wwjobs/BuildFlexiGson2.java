@@ -16,7 +16,7 @@ public class BuildFlexiGson2 extends BuildWinterwellProject {
 
 	public BuildFlexiGson2() {
 		super("flexi-gson");
-		setVersion("1.0.1"); // 28 Apr 2021
+		setVersion("1.0.2"); // 02 Nov 2021
 	}
 
 	@Override
