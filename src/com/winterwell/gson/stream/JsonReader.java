@@ -994,15 +994,14 @@ public class JsonReader implements Closeable {
 	 *             if the next literal value cannot be parsed as a double, or is
 	 *             non-finite.
 	 */
-	public double nextDouble() throws IOException {
+	public Double nextDouble() throws IOException {
 		int p = peeked;
 		if (p == PEEKED_NONE) {
 			p = doPeek();
 		}
 
 		if (p == PEEKED_LONG) {
-			peeked = PEEKED_NONE;
-			pathIndices[stackSize - 1]++;
+			resetPeeked();
 			return (double) peekedLong;
 		}
 
@@ -1021,6 +1020,10 @@ public class JsonReader implements Closeable {
 		}
 
 		peeked = PEEKED_BUFFERED;
+		if (peekedString.isEmpty()) {
+			resetPeeked();
+			return null;
+		}
 		double result = Double.parseDouble(peekedString); // don't catch this
 															// NumberFormatException.
 		// Upgrade to BigInteger?
@@ -1035,10 +1038,14 @@ public class JsonReader implements Closeable {
 							+ getLineNumber() + " column " + getColumnNumber()
 							+ " path " + getPath());
 		}
-		peekedString = null;
-		peeked = PEEKED_NONE;
-		pathIndices[stackSize - 1]++;
+		resetPeeked();
 		return result;
+	}
+
+	private void resetPeeked() {
+		peeked = PEEKED_NONE;
+		peekedString = null;
+		pathIndices[stackSize - 1]++;
 	}
 
 	/**
@@ -1109,15 +1116,14 @@ public class JsonReader implements Closeable {
 	 *             if the next literal value cannot be parsed as a number, or
 	 *             exactly represented as a long.
 	 */
-	public long nextLong() throws IOException {
+	public Long nextLong() throws IOException {
 		int p = peeked;
 		if (p == PEEKED_NONE) {
 			p = doPeek();
 		}
 
 		if (p == PEEKED_LONG) {
-			peeked = PEEKED_NONE;
-			pathIndices[stackSize - 1]++;
+			resetPeeked();
 			return peekedLong;
 		}
 
@@ -1142,6 +1148,10 @@ public class JsonReader implements Closeable {
 		}
 
 		peeked = PEEKED_BUFFERED;
+		if (peekedString.isEmpty()) {
+			resetPeeked();
+			return null;
+		}
 		double asDouble = Double.parseDouble(peekedString); // don't catch this
 															// NumberFormatException.
 		long result = (long) asDouble;
@@ -1151,9 +1161,7 @@ public class JsonReader implements Closeable {
 					+ peekedString + " at line " + getLineNumber() + " column "
 					+ getColumnNumber() + " path " + getPath());
 		}
-		peekedString = null;
-		peeked = PEEKED_NONE;
-		pathIndices[stackSize - 1]++;
+		resetPeeked();
 		return result;
 	}
 
@@ -1341,7 +1349,7 @@ public class JsonReader implements Closeable {
 	 *             if the next literal value cannot be parsed as a number, or
 	 *             exactly represented as an int.
 	 */
-	public int nextInt() throws IOException {
+	public Integer nextInt() throws IOException {
 		int p = peeked;
 		if (p == PEEKED_NONE) {
 			p = doPeek();
@@ -1367,10 +1375,14 @@ public class JsonReader implements Closeable {
 		} else if (p == PEEKED_SINGLE_QUOTED || p == PEEKED_DOUBLE_QUOTED) {
 			peekedString = nextQuotedValue(p == PEEKED_SINGLE_QUOTED ? '\''
 					: '"');
+			// DW: "" as null
+			if (peekedString.isEmpty()) {
+				resetPeeked();
+				return null;
+			}
 			try {
 				result = Integer.parseInt(peekedString);
-				peeked = PEEKED_NONE;
-				pathIndices[stackSize - 1]++;
+				resetPeeked();
 				return result;
 			} catch (NumberFormatException ignored) {
 				// Fall back to parse as a double below.
@@ -1391,9 +1403,7 @@ public class JsonReader implements Closeable {
 					+ peekedString + " at line " + getLineNumber() + " column "
 					+ getColumnNumber() + " path " + getPath());
 		}
-		peekedString = null;
-		peeked = PEEKED_NONE;
-		pathIndices[stackSize - 1]++;
+		resetPeeked();
 		return result;
 	}
 

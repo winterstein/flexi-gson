@@ -419,23 +419,20 @@ public class Gson {
 //						);
 	}
 
-	private TypeAdapter<Number> doubleAdapter(
+	private TypeAdapter<Double> doubleAdapter(
 			boolean serializeSpecialFloatingPointValues) {
 		if (serializeSpecialFloatingPointValues) {
 			return TypeAdapters.DOUBLE;
 		}
-		return new TypeAdapter<Number>() {
+		// Almost identical to TypeAdapters.DOUBLE! Just adds an extra check on write
+		return new TypeAdapter<Double>() {
 			@Override
 			public Double read(JsonReader in) throws IOException {
-				if (in.peek() == JsonToken.NULL) {
-					in.nextNull();
-					return null;
-				}
-				return in.nextDouble();
+				return TypeAdapters.DOUBLE.read(in);
 			}
 
 			@Override
-			public void write(JsonWriter out, Number value) throws IOException {
+			public void write(JsonWriter out, Double value) throws IOException {
 				if (value == null) {
 					out.nullValue();
 					return;
@@ -447,23 +444,19 @@ public class Gson {
 		};
 	}
 
-	private TypeAdapter<Number> floatAdapter(
+	private TypeAdapter<Float> floatAdapter(
 			boolean serializeSpecialFloatingPointValues) {
 		if (serializeSpecialFloatingPointValues) {
 			return TypeAdapters.FLOAT;
 		}
-		return new TypeAdapter<Number>() {
+		return new TypeAdapter<Float>() {
 			@Override
 			public Float read(JsonReader in) throws IOException {
-				if (in.peek() == JsonToken.NULL) {
-					in.nextNull();
-					return null;
-				}
-				return (float) in.nextDouble();
+				return TypeAdapters.FLOAT.read(in);
 			}
 
 			@Override
-			public void write(JsonWriter out, Number value) throws IOException {
+			public void write(JsonWriter out, Float value) throws IOException {
 				if (value == null) {
 					out.nullValue();
 					return;

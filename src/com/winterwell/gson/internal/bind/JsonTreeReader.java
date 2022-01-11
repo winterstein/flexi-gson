@@ -197,7 +197,7 @@ public final class JsonTreeReader extends JsonReader {
 	}
 
 	@Override
-	public double nextDouble() throws IOException {
+	public Double nextDouble() throws IOException {
 		JsonToken token = peek();
 		if (token != JsonToken.NUMBER && token != JsonToken.STRING) {
 			throw new IllegalStateException("Expected " + JsonToken.NUMBER
@@ -213,7 +213,7 @@ public final class JsonTreeReader extends JsonReader {
 	}
 
 	@Override
-	public long nextLong() throws IOException {
+	public Long nextLong() throws IOException {
 		JsonToken token = peek();
 		if (token != JsonToken.NUMBER && token != JsonToken.STRING) {
 			throw new IllegalStateException("Expected " + JsonToken.NUMBER
@@ -225,13 +225,13 @@ public final class JsonTreeReader extends JsonReader {
 	}
 
 	@Override
-	public int nextInt() throws IOException {
+	public Integer nextInt() throws IOException {
 		JsonToken token = peek();
 		if (token != JsonToken.NUMBER && token != JsonToken.STRING) {
 			throw new IllegalStateException("Expected " + JsonToken.NUMBER
 					+ " but was " + token);
 		}
-		int result = ((JsonPrimitive) peekStack()).getAsInt();
+		Integer result = ((JsonPrimitive) peekStack()).getAsInt();
 		popStack();
 		return result;
 	}
