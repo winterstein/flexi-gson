@@ -236,7 +236,8 @@ public final class TypeAdapters {
 				return null;
 			}
 			try {
-				return (short) in.nextInt();
+				Integer i = in.nextInt();
+				return i==null? null : i.shortValue();
 			} catch (NumberFormatException e) {
 				throw new JsonSyntaxException(e);
 			}
@@ -251,9 +252,9 @@ public final class TypeAdapters {
 	public static final TypeAdapterFactory SHORT_FACTORY = newFactory(
 			short.class, Short.class, SHORT);
 
-	public static final TypeAdapter<Number> INTEGER = new TypeAdapter<Number>() {
+	public static final TypeAdapter<Integer> INTEGER = new TypeAdapter<Integer>() {
 		@Override
-		public Number read(JsonReader in) throws IOException {
+		public Integer read(JsonReader in) throws IOException {
 			if (in.peek() == JsonToken.NULL) {
 				in.nextNull();
 				return null;
@@ -266,7 +267,7 @@ public final class TypeAdapters {
 		}
 
 		@Override
-		public void write(JsonWriter out, Number value) throws IOException {
+		public void write(JsonWriter out, Integer value) throws IOException {
 			out.value(value);
 		}
 	};
@@ -294,25 +295,26 @@ public final class TypeAdapters {
 		}
 	};
 
-	public static final TypeAdapter<Number> FLOAT = new TypeAdapter<Number>() {
+	public static final TypeAdapter<Float> FLOAT = new TypeAdapter<Float>() {
 		@Override
-		public Number read(JsonReader in) throws IOException {
+		public Float read(JsonReader in) throws IOException {
 			if (in.peek() == JsonToken.NULL) {
 				in.nextNull();
 				return null;
 			}
-			return (float) in.nextDouble();
+			Double d = in.nextDouble();
+			return d==null? null : d.floatValue();
 		}
 
 		@Override
-		public void write(JsonWriter out, Number value) throws IOException {
+		public void write(JsonWriter out, Float value) throws IOException {
 			out.value(value);
 		}
 	};
 
-	public static final TypeAdapter<Number> DOUBLE = new TypeAdapter<Number>() {
+	public static final TypeAdapter<Double> DOUBLE = new TypeAdapter<>() {
 		@Override
-		public Number read(JsonReader in) throws IOException {
+		public Double read(JsonReader in) throws IOException {
 			if (in.peek() == JsonToken.NULL) {
 				in.nextNull();
 				return null;
@@ -321,7 +323,7 @@ public final class TypeAdapters {
 		}
 
 		@Override
-		public void write(JsonWriter out, Number value) throws IOException {
+		public void write(JsonWriter out, Double value) throws IOException {
 			out.value(value);
 		}
 	};
