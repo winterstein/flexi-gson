@@ -16,6 +16,9 @@
 
 package com.winterwell.gson;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,20 +37,42 @@ public final class JsonObject extends JsonElement {
       new LinkedTreeMap<String, JsonElement>();
 
 
-//  	/**
-//  	 * TODO @return copy out into a map object. Note: Does not preserve key order.
-//  	 */
-//  	public Map<String,?> getAsMap() {
-//		HashMap map = new HashMap();
-//		for(Map.Entry<String, JsonElement> e : entrySet()) {
-//			JsonElement ve = e.getValue();
-//			if (ve.isJsonNull()) continue;
-//			Object v;
-//			if (ve.isJsonPrimitive()) v = ve.getValue();
-//			map.put(e.getKey(), v);
-//		}
-//		return map;
-//	}
+  	/**
+  	 * @return copy out into a map object. Note: Does not preserve key order.
+  	 */
+  	public Map<String,?> toMap() {
+  		return (Map) toMap2(this);
+  	}
+  	/**
+  	 * unpack JsonElement to POJO
+  	 * @param je
+  	 * @return
+  	 */
+  	private Object toMap2(JsonElement je) {
+  		if (je.isJsonNull()) {
+  			return null;
+  		}
+		if (je.isJsonPrimitive()) {
+			return ((JsonPrimitive)je).getValue();
+		}
+		if (je.isJsonArray()) {
+			JsonArray ja = (JsonArray)je;
+			List v = new ArrayList();
+			for(JsonElement ji : ja) {
+				Object vi = toMap2(ji);
+				v.add(vi);
+			}
+			return v;
+		}
+		JsonObject jo = (JsonObject) je;
+		HashMap map = new HashMap();
+		for(Map.Entry<String, JsonElement> e : jo.entrySet()) {
+			JsonElement ve = e.getValue();
+			Object v = toMap2(ve);
+			if (v != null) map.put(e.getKey(), v);
+		}
+		return map;
+	}
 
   
   @Override

@@ -32,7 +32,15 @@ import com.winterwell.gson.internal.LazilyParsedNumber;
  */
 public final class JsonPrimitive extends JsonElement {
 
+	/**
+	 * @deprecated Warning: this can lose precision with Long to Double!
+	 * @return
+	 */
 	public Object getValue() {
+		if (value instanceof LazilyParsedNumber) {
+			// coerce to Double -- could lose some precision on Long :(
+			return ((LazilyParsedNumber) value).doubleValue();
+		}
 		return value;
 	}
 	

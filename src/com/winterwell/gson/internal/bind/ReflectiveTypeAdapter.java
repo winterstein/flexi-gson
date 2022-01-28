@@ -302,6 +302,10 @@ final class ReflectiveTypeAdapter<T> extends TypeAdapter<T> {
 			return value;
 			
 		}
+		// js style coercion number>string
+		if (String.class.equals(fClass) && value instanceof Number) {
+			return value.toString();
+		}
 		if (value instanceof Map) {
 			// Handle Map/List sub-class choices based on the field
 			// E.g. a ListMap could get serialised to {}, deserialised to LinkedHashMap -- in which case convert
