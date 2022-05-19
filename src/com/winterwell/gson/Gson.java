@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import com.winterwell.gson.internal.$Gson$Preconditions;
 import com.winterwell.gson.internal.ConstructorConstructor;
@@ -60,6 +61,7 @@ import com.winterwell.gson.stream.JsonReader;
 import com.winterwell.gson.stream.JsonToken;
 import com.winterwell.gson.stream.JsonWriter;
 import com.winterwell.gson.stream.MalformedJsonException;
+import com.winterwell.utils.io.FileUtils;
 import com.winterwell.utils.log.KErrorPolicy;
 
 /**
@@ -194,13 +196,7 @@ public class Gson {
 	private final boolean generateNonExecutableJson;
 	private final boolean prettyPrinting;
 
-	final JsonDeserializationContext deserializationContext = new JsonDeserializationContext() {
-		@SuppressWarnings("unchecked")
-		public <T> T deserialize(JsonElement json, Type typeOfT)
-				throws JsonParseException {
-			return (T) fromJson(json, typeOfT);
-		}
-	};
+	final JsonDeserializationContext deserializationContext = new OneJsonDeserializationContext(this);
 
 	final JsonSerializationContext serializationContext = new JsonSerializationContext() {
 		public JsonElement serialize(Object src) {
@@ -234,6 +230,8 @@ public class Gson {
 	 * How do we handle "@class" failures?
 	 */
 	private KErrorPolicy classErrorPolicy = KErrorPolicy.THROW_EXCEPTION;
+
+	private List<Function<String, String>> preprocessors;
 
 
 	/**
@@ -306,7 +304,8 @@ public class Gson {
 				null/* loop policy */,
 				false,
 				Collections.<TypeAdapterFactory> emptyList(), 
-				Collections.EMPTY_MAP
+				Collections.EMPTY_MAP, 
+				null
 				);
 	}
 
@@ -314,6 +313,7 @@ public class Gson {
 	 * @param classProperty
 	 *            ^Daniel
 	 * @param classForClass 
+	 * @param preprocessors 
 	 * @param loopChecking
 	 */
 	Gson(final Excluder excluder, final FieldNamingStrategy fieldNamingPolicy,
@@ -325,7 +325,8 @@ public class Gson {
 			LongSerializationPolicy longSerializationPolicy,
 			String classProperty, KLoopPolicy loopPolicy,
 			boolean lenientReader,
-			List<TypeAdapterFactory> typeAdapterFactories, Map<String, Class> classForClass)
+			List<TypeAdapterFactory> typeAdapterFactories, Map<String, Class> classForClass, 
+			List<Function<String, String>> preprocessors)
     {
 		this.constructorConstructor = new ConstructorConstructor(
 				instanceCreators, classProperty);
@@ -338,6 +339,7 @@ public class Gson {
 		this.loopPolicy = loopPolicy == null ? KLoopPolicy.NO_CHECKS
 				: loopPolicy;
 		this.lenientReader = lenientReader;
+		this.preprocessors = preprocessors;
 
 		List<TypeAdapterFactory> factories = new ArrayList<TypeAdapterFactory>();
 
@@ -1063,6 +1065,16 @@ public class Gson {
 	@SuppressWarnings("unchecked")
 	public <T> T fromJson(Reader json, Type typeOfT) throws JsonIOException,
 			JsonSyntaxException {
+		// preprocessor?
+		if (preprocessors!=null) {
+			// bleurgh - have to unstream
+			String sjson = FileUtils.read(json);
+			for(Function<String, String> preprocessor : preprocessors) {
+				sjson = preprocessor.apply(sjson);
+			}
+			StringReader json2 = new StringReader(sjson);
+			json = json2;
+		}
 		JsonReader jsonReader = new JsonReader(json);
 		if (lenientReader) {
 			jsonReader.setLenient(true);
@@ -1372,5 +1384,22 @@ public class Gson {
 			return KErrorPolicy.process(classErrorPolicy, e);
 		}		
 	}
+	
+	public static class OneJsonDeserializationContext implements JsonDeserializationContext {
+		public final Gson gson;
+
+		public OneJsonDeserializationContext(Gson gson) {
+			this.gson = gson;
+		}
+
+		@SuppressWarnings("unchecked")
+		public <T> T deserialize(JsonElement json, Type typeOfT)
+				throws JsonParseException 
+		{
+			return (T) gson.fromJson(json, typeOfT);
+		}
+	}
 }
+
+
 

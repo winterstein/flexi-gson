@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import com.winterwell.gson.StandardAdapters.LenientLongAdapter;
 import com.winterwell.gson.internal.$Gson$Preconditions;
@@ -90,6 +91,7 @@ public class GsonBuilder {
   private KLoopPolicy loopPolicy = KLoopPolicy.QUIET_NULL;
   private boolean lenientReader;
   private Map<String, Class> classForClass;
+private List<Function<String, String>> preprocessors;
 
   /**
    * Creates a GsonBuilder instance that can be used to build Gson with various configuration
@@ -98,6 +100,20 @@ public class GsonBuilder {
    * {@link #create()}.
    */
   public GsonBuilder() {
+  }
+
+  /**
+   * DW edit: allow pre-processing of the input.
+   *  
+   * Efficiency note: Setting this will mean you can't stream the reader
+   */
+  public GsonBuilder registerStringPreprocessor(java.util.function.Function<String, String> _preprocessor) {
+	  if (preprocessors==null) preprocessors = new ArrayList();
+	  if (preprocessors.contains(_preprocessor)) {
+		  throw new IllegalStateException("Duplicate register of preprocessor "+_preprocessor);
+	  }
+	  this.preprocessors.add(_preprocessor);
+	  return this;
   }
 
   /**
@@ -557,7 +573,7 @@ public class GsonBuilder {
         generateNonExecutableJson, escapeHtmlChars, prettyPrinting,
         serializeSpecialFloatingPointValues, longSerializationPolicy, 
         classProperty, loopPolicy, lenientReader,
-        factories, classForClass);
+        factories, classForClass, preprocessors);
   }
 
   private void addTypeAdaptersForDate(String datePattern, int dateStyle, int timeStyle,
