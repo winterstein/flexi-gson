@@ -18,6 +18,7 @@ package com.winterwell.gson.internal.bind;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -95,7 +96,8 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
 
 
 	private Map<String, BoundField> getBoundFields(Gson context,
-			TypeToken<?> type, Class<?> raw) {
+			TypeToken<?> type, Class<?> raw) 
+	{
 		Map<String, BoundField> result = new LinkedHashMap<String, BoundField>();
 		if (raw.isInterface()) {
 			return result;
@@ -110,7 +112,11 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
 				if (!serialize && !deserialize) {
 					continue;
 				}
-				field.setAccessible(true);
+				try {
+					field.setAccessible(true);
+				} catch(InaccessibleObjectException ioe) {
+					throw ioe; // FIXME latest java is too strict. Use --add-opens??
+				}
 				Type fieldType = $Gson$Types.resolve(type.getType(), raw,
 						field.getGenericType());
 				BoundField boundField = createBoundField(context, field,
