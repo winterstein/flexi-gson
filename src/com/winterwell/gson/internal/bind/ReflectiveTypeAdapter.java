@@ -294,6 +294,12 @@ final class ReflectiveTypeAdapter<T> extends TypeAdapter<T> {
 		if (fClass != double.class && ReflectionUtils.isaNumber(fClass)) {
 			return MathUtils.cast(fClass, (Number) value);			
 		}
+		if (fClass == byte.class || fClass== Byte.class) {
+			if (value instanceof Number) {
+				byte bv = ((Number)value).byteValue();
+				return bv;
+			}			
+		}
 		if (value instanceof String) {
 			// If a Map convertor was used earlier, classes like Class and URI can end up as Strings
 			// NB: we must re-wrap value as a json string to pass it back into Gson.

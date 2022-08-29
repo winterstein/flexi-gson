@@ -79,6 +79,39 @@ public static class TimeTypeAdapter implements JsonSerializer<Time>, JsonDeseria
 
 
 
+
+///**
+// * Drop the stacktrace??
+// * @author daniel
+// */
+//public static class ThrowableLightAdapter implements JsonSerializer<Throwable>, JsonDeserializer<Throwable> {
+//	@Override
+//	public JsonElement serialize(Throwable src, Type srcType,
+//			JsonSerializationContext context) {
+//		return new JsonPrimitive(src.toISOString());
+//	}
+//
+//	@Override
+//	public Throwable deserialize(JsonElement json, Type type,
+//			JsonDeserializationContext context) throws JsonParseException {
+//		if (json.isJsonObject()) {
+//			// a vanilla Gson will turn Time into {ut: }
+//			JsonObject jobj = (JsonObject) json;
+//			JsonPrimitive ut = jobj.getAsJsonPrimitive("ut");
+//			long utv = ut.getAsLong();
+//			return new Time(utv);
+//		}
+//		String s = json.getAsString();
+//		if (Utils.isBlank(s)) {
+//			return null;
+//		}
+//		Time t = TimeUtils.parseExperimental(s);
+//		return t;
+//	}
+//}
+
+
+
 /**
  * Treat any CharSequence class like a String
  * Warning: This loses the type info! 
