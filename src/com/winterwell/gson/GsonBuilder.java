@@ -33,6 +33,7 @@ import com.winterwell.gson.internal.Excluder;
 import com.winterwell.gson.internal.bind.TypeAdapters;
 import com.winterwell.gson.reflect.TypeToken;
 import com.winterwell.gson.stream.JsonReader;
+import com.winterwell.utils.time.Time;
 
 /**
  * <p>Use this builder to construct a {@link Gson} instance when you need to set configuration
@@ -640,6 +641,7 @@ private List<Function<String, String>> preprocessors;
 			.setLenientReader(true)				
 			.serializeSpecialFloatingPointValues()
 			.setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+			.registerTypeAdapter(Time.class, new StandardAdapters.TimeTypeAdapter())
 			.setClassProperty(null).setLoopPolicy(KLoopPolicy.QUIET_NULL);
 	}
 
