@@ -1,3 +1,12 @@
+/**
+ * A very simplistic gradle build script
+ *
+ * To publish to your local ~/.m2 run 'gradle publishToMavenLocal'
+ *
+ * Definitely not DRY wrt the Bob side of things. Whenever changes are made there
+ * to either the version number or dependencies they need to be replicated here.
+ */
+
 plugins {
     `java-library`
     `maven-publish`
