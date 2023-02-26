@@ -1,6 +1,7 @@
 package com.winterwell.gson;
 
 import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.Map;
 
 import org.junit.Test;
@@ -9,6 +10,7 @@ import com.winterwell.utils.AString;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Slice;
 import com.winterwell.utils.time.Time;
+import com.winterwell.utils.web.XStreamUtils;
 
 public class StandardAdaptersTest {
 
@@ -74,7 +76,6 @@ public class StandardAdaptersTest {
 	@Test
 	public void testTime() {
 		Gson gsonWith = new GsonBuilder()
-						.registerTypeAdapter(Class.class, new StandardAdapters.ClassTypeAdapter())
 						.registerTypeAdapter(Time.class, new StandardAdapters.TimeTypeAdapter())
 						.create();
 		
@@ -85,6 +86,25 @@ public class StandardAdaptersTest {
 		assert now.equals(now2);
 	}
 	
+	/**
+	 * Explore test: Date serialises poorly (it drops milliseconds)
+	 * But then: we don't have an adapter for it
+	 */
+	@Test
+	public void testDate() {
+		Gson gsonWith = new GsonBuilder()
+				.registerTypeAdapter(Time.class, new StandardAdapters.TimeTypeAdapter())
+				.create();
+
+		Date now = new Date();
+		String gson1 = Gson.toJSON(now);
+		System.out.println(gson1);
+		Date now2 = gsonWith.fromJson(gson1, Date.class);
+		System.out.println(now.getTime() - now2.getTime());
+		assert Math.abs(now.getTime() - now2.getTime()) < 1000;
+//		assert now.equals(now2) : now2 +" vs "+now; Fails -- Date loses millisecond precision
+	}
+
 
 	@Test
 	public void testCharSequence() {
