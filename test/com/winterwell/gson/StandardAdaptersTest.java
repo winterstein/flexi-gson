@@ -10,7 +10,6 @@ import com.winterwell.utils.AString;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Slice;
 import com.winterwell.utils.time.Time;
-import com.winterwell.utils.web.XStreamUtils;
 
 public class StandardAdaptersTest {
 
