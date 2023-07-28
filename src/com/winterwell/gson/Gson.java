@@ -62,7 +62,9 @@ import com.winterwell.gson.stream.JsonToken;
 import com.winterwell.gson.stream.JsonWriter;
 import com.winterwell.gson.stream.MalformedJsonException;
 import com.winterwell.utils.io.FileUtils;
+import com.winterwell.utils.io.ISerialize;
 import com.winterwell.utils.log.KErrorPolicy;
+import com.winterwell.utils.web.ISerializeJson;
 
 /**
  * This is the main class for using Gson. Gson is typically used by first
@@ -122,7 +124,7 @@ import com.winterwell.utils.log.KErrorPolicy;
  * @author Jesse Wilson
  * @author Daniel Winterstein
  */
-public class Gson {
+public class Gson implements ISerializeJson {
 	
 	/**
 	 * POJO to map/list/primitive "json object" conversion .
@@ -1303,6 +1305,7 @@ public class Gson {
 	 * @return de-serialised POJO
 	 * @since October 2014, added by Daniel
 	 */
+	@Override
 	public <T> T fromJson(String json) {
 		if (classProperty==null) {
 			throw new IllegalStateException("This method works via @class, which is switched off. Please use fromJson(String,Class)");
@@ -1324,6 +1327,7 @@ public class Gson {
 		return (T) fromJson(json, Object.class);
 	}
 
+	@Override
 	public <X> X convert(Map mapFromJson, Class<X> klass) {
 		// inefficient, but should work
 		String json = toJson(mapFromJson);
@@ -1399,6 +1403,7 @@ public class Gson {
 			return (T) gson.fromJson(json, typeOfT);
 		}
 	}
+
 }
 
 
