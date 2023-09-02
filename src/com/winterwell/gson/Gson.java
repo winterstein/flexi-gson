@@ -62,7 +62,6 @@ import com.winterwell.gson.stream.JsonToken;
 import com.winterwell.gson.stream.JsonWriter;
 import com.winterwell.gson.stream.MalformedJsonException;
 import com.winterwell.utils.io.FileUtils;
-import com.winterwell.utils.io.ISerialize;
 import com.winterwell.utils.log.KErrorPolicy;
 import com.winterwell.utils.web.ISerializeJson;
 
