@@ -8,6 +8,20 @@ import org.junit.Test;
 import com.winterwell.utils.containers.ArrayMap;
 
 public class FlexiGsonTest {
+
+	static record Foo(String bar) {};
+	
+	@Test
+	public void testRecord() {
+		{
+			Gson gson = new GsonBuilder().create();
+			ArrayMap map = new ArrayMap("a", new Foo("bleurgh"));
+			String json = gson.toJson(map);		
+			assert json.contains("bleurgh");
+			Object map2 = gson.fromJson(json);
+			System.out.println(map2);
+		}		
+	}
 	
 	@Test
 	public void testESBug() {
