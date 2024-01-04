@@ -3,7 +3,6 @@ flexi-gson
 
 A more robust version of the Gson Java - JSON serialisation library. This can handle vague classes and circular references.
 
-**This repository is setup for [SoDash](http://sodash.com)'s use. If you wish to use this project, please contact us.** 
 
 ## Handling "Vague" classes 
 
@@ -26,8 +25,11 @@ Note that the type information -- that x is an instance of Bar -- has been lost.
 
 This case happens all the time in Java, either through using interfaces or Maps. So we'd like to handle it!
 
-## The Parent GSON: Version ??
+## The Parent GSON: Version ?? TODO rebase of the current version
 
-This version of GSON was forked from ??
+This version of GSON was "hand-forked" from the old Google Code version control system (which wasn't git).
 
-TODO now that gson has moved form Google Code to Git and GitHub -- it'd be good to fork the official repo and edit that.
+Now that gson has moved from Google Code to Git and GitHub -- it'd be good to fork the official repo, and re-do our edits to that.
+
+Unfortunately that is likely to be painful, as they've shifted quite a few classes around.
+
