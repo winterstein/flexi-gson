@@ -2,15 +2,15 @@
 <classpath>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
 		<attributes>
+			<attribute name="test" value="true"/>
 			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
-			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
 		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
 			<attribute name="test" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" output="target/classes" path="src/main/java">
@@ -29,11 +29,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="var" path="M2_REPO/org/junit/jupiter/junit-jupiter-api/5.10.0-RC2/junit-jupiter-api-5.10.0-RC2.jar" sourcepath="M2_REPO/org/junit/jupiter/junit-jupiter-api/5.10.0-RC2/junit-jupiter-api-5.10.0-RC2-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar" sourcepath="M2_REPO/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/junit/platform/junit-platform-commons/1.10.0-RC2/junit-platform-commons-1.10.0-RC2.jar" sourcepath="M2_REPO/org/junit/platform/junit-platform-commons/1.10.0-RC2/junit-platform-commons-1.10.0-RC2-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar" sourcepath="M2_REPO/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/good-loop/com/winterwell.utils/0.0.1-SNAPSHOT/winterwell.utils-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
