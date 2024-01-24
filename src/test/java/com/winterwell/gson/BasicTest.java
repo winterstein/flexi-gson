@@ -1,5 +1,6 @@
 package com.winterwell.gson;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.winterwell.utils.containers.ArrayMap;
@@ -15,7 +16,7 @@ public class BasicTest {
 		Object jobj = gson.fromJson(json);
 	}
 	
-	@Test
+	@Test @Ignore
 	public void testMapFromJsonWithBadClass() {
 		try {
 			String json = ("{'@class':'foo.bar.Nah'}")

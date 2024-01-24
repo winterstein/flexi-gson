@@ -1,5 +1,7 @@
 package com.winterwell.gson;
 
+import static org.junit.Assert.assertEquals;
+
 import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.Map;
@@ -82,7 +84,7 @@ public class StandardAdaptersTest {
 		String gson1 = Gson.toJSON(now);
 		System.out.println(gson1);
 		Time now2 = gsonWith.fromJson(gson1, Time.class);
-		assert now.equals(now2);
+		assertEquals(now.toISOString(), now2.toISOString()); // Note: can lose msecs level accuracy!
 	}
 	
 	/**
