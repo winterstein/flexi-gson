@@ -8,7 +8,9 @@ import com.winterwell.gson.stream.JsonReader;
 import com.winterwell.gson.stream.JsonToken;
 import com.winterwell.gson.stream.JsonWriter;
 import com.winterwell.utils.Utils;
+import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
+import com.winterwell.utils.time.TimeParser;
 import com.winterwell.utils.time.TimeUtils;
 import com.winterwell.utils.web.IHasJson;
 
@@ -52,12 +54,25 @@ public class StandardAdapters {
  * @author daniel
  */
 public static class TimeTypeAdapter implements JsonSerializer<Time>, JsonDeserializer<Time> {
+	private TUnit level;
+
+	public TimeTypeAdapter() {
+	}
 	@Override
 	public JsonElement serialize(Time src, Type srcType,
 			JsonSerializationContext context) {
-		return new JsonPrimitive(src.toISOString());
-	}
-
+		String s;
+		if (level==TUnit.MILLISECOND) {
+			s = src.format("yyyy-MM-dd'T'HH:mm:ss:S'Z'");
+		} else if (level==TUnit.DAY) {
+			s = src.toISOStringDateOnly();
+			// TODO other levels
+		} else {
+			s = src.toISOString();
+		}
+		return new JsonPrimitive(s);
+	}	
+	
 	@Override
 	public Time deserialize(JsonElement json, Type type,
 			JsonDeserializationContext context) throws JsonParseException {
@@ -72,8 +87,15 @@ public static class TimeTypeAdapter implements JsonSerializer<Time>, JsonDeseria
 		if (Utils.isBlank(s)) {
 			return null;
 		}
-		Time t = TimeUtils.parseExperimental(s);
+		Time t = tp.parseExperimental(s); // new Time(s); //TimeUtils.parseExperimental(s);
 		return t;
+	}
+	
+	TimeParser tp = new TimeParser();
+
+	public TimeTypeAdapter setLevel(TUnit millisecond) {
+		level = millisecond;
+		return this;
 	}
 }
 

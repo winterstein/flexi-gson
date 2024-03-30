@@ -6,9 +6,11 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.winterwell.gson.StandardAdapters.TimeTypeAdapter;
 import com.winterwell.utils.AString;
 import com.winterwell.utils.containers.ArrayMap;
 import com.winterwell.utils.containers.Slice;
+import com.winterwell.utils.time.TUnit;
 import com.winterwell.utils.time.Time;
 
 public class StandardAdaptersTest {
@@ -74,15 +76,21 @@ public class StandardAdaptersTest {
 	
 	@Test
 	public void testTime() {
+		TimeTypeAdapter tta = new StandardAdapters.TimeTypeAdapter();
+		tta.setLevel(TUnit.MILLISECOND);
+		
 		Gson gsonWith = new GsonBuilder()
-						.registerTypeAdapter(Time.class, new StandardAdapters.TimeTypeAdapter())
+						.registerTypeAdapter(Time.class, tta)
 						.create();
 		
 		Time now = new Time();
-		String gson1 = Gson.toJSON(now);
+		String gson1 = gsonWith.toJson(now);
+		System.out.println(now);
 		System.out.println(gson1);
 		Time now2 = gsonWith.fromJson(gson1, Time.class);
-		assert now.equals(now2);
+		System.out.println(now2);
+		
+		assert now.equals(now2) : now.getTime() - now2.getTime();
 	}
 	
 	/**

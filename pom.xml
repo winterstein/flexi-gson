@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>good-loop.com</groupId>
-  <artifactId>winterwell.utils</artifactId>
+  <artifactId>flexi-gson</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>winterwell.utils</name>
+  <name>flexi-gson</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -29,6 +29,11 @@
     <scope>test</scope>
 </dependency>
 
+
+	<dependency><groupId>good-loop.com</groupId>
+  <artifactId>winterwell.utils</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+</dependency>
 
   </dependencies>
   <build>
