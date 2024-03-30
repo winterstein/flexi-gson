@@ -1,0 +1,93 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>good-loop.com</groupId>
+  <artifactId>winterwell.utils</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>winterwell.utils</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+	<dependency><groupId>com.thoughtworks.xstream</groupId><artifactId>xstream</artifactId><version>1.4.19</version></dependency>
+<dependency><groupId>org.ogce</groupId><artifactId>xpp3</artifactId><version>1.1.6</version></dependency>
+<dependency><groupId>dnsjava</groupId><artifactId>dnsjava</artifactId><version>2.1.9</version></dependency>
+
+<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+<dependency>
+<groupId>junit</groupId>
+  <artifactId>junit</artifactId>
+  <version>4.7</version>
+    <scope>test</scope>
+</dependency>
+
+
+  </dependencies>
+  <build>
+    <pluginManagement>
+      <plugins>
+    <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <version>3.2.3</version>
+    <configuration>
+        <argLine>-ea --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.security=ALL-UNNAMED --add-opens java.base/sun.security.pkcs=ALL-UNNAMED --add-opens java.base/java.lang.ref=ALL-UNNAMED</argLine>
+    </configuration>
+</plugin>
+
+<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.6.1</version>
+        <executions>
+<!-- Does nothing??
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <overWriteIfNewer>true</overWriteIfNewer>
+            </configuration>
+          </execution> -->
+          
+          <!-- does nothing?? -->
+                    <execution>
+            <id>copy-installed</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>${project.artifactId}</artifactId>
+                  <version>${project.version}</version>
+                  <type>${project.packaging}</type>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${basedir}</outputDirectory>
+            </configuration>
+          </execution>
+          
+          
+        </executions>
+      </plugin>
+      
+            
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  
+</project>
